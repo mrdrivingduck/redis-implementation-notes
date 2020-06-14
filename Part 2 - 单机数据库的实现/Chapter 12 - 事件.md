@@ -17,7 +17,7 @@ Redis 服务器是事件驱动的，主要处理两类事件：
 
 ## File Event
 
-Redis 通过 I/O 多路复用来监听多个 socket，当得到 socket 的命令时，与 socket 关联的 handler 就会被调用。由于 Redis 由单进程的方式被实现，所以 I/O 多路复用程序还是会将所有的 socket 放到一个队列中，然后通过这个队列有序、同步地依次处理事件。每个 handler 中定义了对应事件发生时服务器应该执行的动作：
+Redis 通过 **I/O 多路复用** 来监听多个 socket，当得到 socket 的命令时，与 socket 关联的 handler 就会被调用。由于 Redis 由单进程的方式被实现，所以 I/O 多路复用程序还是会将所有的 socket 放到一个队列中，然后通过这个队列有序、同步地依次处理事件。每个 handler 中定义了对应事件发生时服务器应该执行的动作：
 
 * accept
 * read
