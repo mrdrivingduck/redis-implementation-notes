@@ -1,6 +1,6 @@
 # redis-implementation-notes
 
-⛸️ Notes of reading The Design and Implementation of Redis.
+⛸️ Notes of reading The Design and Implementation of *Redis*.
 
 Created by : Mr Dk.
 
@@ -9,6 +9,10 @@ Created by : Mr Dk.
 Nanjing, Jiangsu, China
 
 ---
+
+## About
+
+A pre-view of [*Redis*](https://redis.io/). I'll move on to analyze source code in the future.
 
 ## License
 
