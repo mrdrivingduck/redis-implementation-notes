@@ -1,6 +1,6 @@
 # redis-implementation-notes
 
-⛸️ Notes of reading The Design and Implementation of *Redis*.
+⛸️ Notes of reading *Design and Implementation of Redis*.
 
 Created by : Mr Dk.
 
