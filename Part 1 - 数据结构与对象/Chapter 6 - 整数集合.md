@@ -26,6 +26,8 @@ typedef struct intset {
 * `INTSET_ENC_INT32` - `int32_t`
 * `INTSET_ENC_INT64` - `int64_t`
 
+`contents` 内维护集合内的所有元素，以 **有序** 的方式排列。
+
 ## Upgrade
 
 当新元素被添加到集合中时，如果新元素的数据长度比当前集合中的长度等级长，将触发集合的升级：
