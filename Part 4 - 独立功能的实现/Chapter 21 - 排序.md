@@ -10,7 +10,7 @@ Nanjing, Jiangsu, China
 
 Redis 的 `SORT` 命令可以对列表的 key、集合的 key 或有序集合的 key 进行排序。
 
-## Implementation of SORT <key>
+## Implementation of SORT Key
 
 这是 `SORT` 命令最简单的使用方式，用于对某个数字值的 key 进行排序。比如，对一个包含大量数字的列表进行排序。
 
@@ -36,10 +36,10 @@ typedef struct _redisSortObject {
 
 通过 `ALPHA` 选项，`SORT` 命令可以对包含字符串的 key 进行排序。具体实现与上述类似：
 
-* 创建一个与排序对象长度相同的 `redisSortObject` 数组
-* 遍历数组，使数组每一项的 `obj` 指针分别指向待排序对象，`cmpobj` 指向被比较的字符串对象
-* 根据 `cmpobj` 对数组进行快速排序
-* 遍历数组，依次将数组每一项 `obj` 指针指向的对象返回给客户端
+- 创建一个与排序对象长度相同的 `redisSortObject` 数组
+- 遍历数组，使数组每一项的 `obj` 指针分别指向待排序对象，`cmpobj` 指向被比较的字符串对象
+- 根据 `cmpobj` 对数组进行快速排序
+- 遍历数组，依次将数组每一项 `obj` 指针指向的对象返回给客户端
 
 ## Implementation of ASC and DESC
 
@@ -94,6 +94,3 @@ SORT fruits BY *-id ALPHA
 5. 向客户端返回排序结果
 
 其中，除了 `GET` 以外，其它选项在命令中的位置不会影响最终结果；而只有保证 `GET` 选项的顺序不变才能保证最终的排序结果不变。
-
----
-

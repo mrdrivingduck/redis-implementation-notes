@@ -18,9 +18,9 @@ Redis 使用字符串对象 (SDS) 来表示 bit array。从 SDS 的 `[0]` 的第
 
 `GETBIT` 返回 bit array 在指定 offset 上的二进制位的值：
 
-* 首先，计算 `offset / 8` 得到对应的 bit 在哪一个字节上
-* 计算 `offset % 8` 得到对应的 bit 在字节中的哪个 bit 上
-* 返回这个 bit 上的数值
+- 首先，计算 `offset / 8` 得到对应的 bit 在哪一个字节上
+- 计算 `offset % 8` 得到对应的 bit 在字节中的哪个 bit 上
+- 返回这个 bit 上的数值
 
 所有计算可以在常数时间内完成，因此算法复杂度为 `O(1)`。
 
@@ -28,11 +28,11 @@ Redis 使用字符串对象 (SDS) 来表示 bit array。从 SDS 的 `[0]` 的第
 
 `SETBIT` 用于设置 bit array 在 offset 偏移量上的 bit：
 
-* 计算 `offset / 8` 得到 bit 在哪一个字节上
-* 如果这个字节已经超出了 SDS 的长度，则需要将 SDS 字符串扩展到这个长度 (SDS 的空间预分配策略还会额外分配 2B 的空闲空间)
-* 计算 `offset % 8` 得到对应的 bit 在字节中的哪个 bit 上
-* 首先保存这个 bit 上的旧值，然后在这个 bit 上设置新值
-* 返回旧值
+- 计算 `offset / 8` 得到 bit 在哪一个字节上
+- 如果这个字节已经超出了 SDS 的长度，则需要将 SDS 字符串扩展到这个长度 (SDS 的空间预分配策略还会额外分配 2B 的空闲空间)
+- 计算 `offset % 8` 得到对应的 bit 在字节中的哪个 bit 上
+- 首先保存这个 bit 上的旧值，然后在这个 bit 上设置新值
+- 返回旧值
 
 ## Implementation of BITCOUNT
 
@@ -58,21 +58,18 @@ Redis 使用字符串对象 (SDS) 来表示 bit array。从 SDS 的 `[0]` 的第
 
 因此目前只能考虑 8-bit 的表 (数百 B) 或 16-bit 的表 (数百 KB)。一个 32-bit 的表需要 (10GB+)。
 
-对于这个问题 (计算 Hamming Weight) 效率最高的算法是 *variable-precision SWAR* 算法，可以在常数时间内计算多个字节的 Hamming Weight，并且不需要额外内存。但是具体流程没看懂。。。
+对于这个问题 (计算 Hamming Weight) 效率最高的算法是 _variable-precision SWAR_ 算法，可以在常数时间内计算多个字节的 Hamming Weight，并且不需要额外内存。但是具体流程没看懂。。。
 
 Redis 在实现中使用了查表算法和 variable-precision SWAR 算法：
 
-* 查表算法的 key 为 8-bit
-* variable-precision SWAR 算法每次循环载入 128-bit，调用四次算法来计算
+- 查表算法的 key 为 8-bit
+- variable-precision SWAR 算法每次循环载入 128-bit，调用四次算法来计算
 
 执行 `BITCOUNT` 时，程序根据剩余未处理的二进制位数量来决定使用哪个算法：
 
-* 如果 >= 128-bit，则使用 variable-precision SWAR 算法
-* 如果 < 128-bit，则使用查表算法
+- 如果 >= 128-bit，则使用 variable-precision SWAR 算法
+- 如果 < 128-bit，则使用查表算法
 
 ## Implementation of BITOP
 
 `BITOP` 命令对两个 bit array 直接进行 `&` / `|` / `^` / `~` 操作，C 语言的位操作直接支持这些运算。Redis 首先会创建一个空白的 bit array 用于保存结果，然后直接进行运算。
-
----
-

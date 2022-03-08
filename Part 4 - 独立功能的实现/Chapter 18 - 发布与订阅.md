@@ -77,6 +77,3 @@ typedef struct pubsubPattern {
 ### PUBSUB NUMPAT
 
 返回服务器当前订阅模式的数量。服务器直接返回 `pubsub_patterns` 链表的长度。
-
----
-

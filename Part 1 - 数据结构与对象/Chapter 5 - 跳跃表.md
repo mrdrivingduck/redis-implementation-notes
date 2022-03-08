@@ -23,21 +23,21 @@ typedef struct zskiplistNode {
     // 层
     struct zskiplistLevel {
         struct zskiplistNode *forward;
-        unsigned int span; // 跨度 
+        unsigned int span; // 跨度
     } level[];
 } zskiplistNode;
 ```
 
-创建 skiplist 时，根据 *幂次定律 (Power Law)* (越大的数出现的概率越小) 在 1-32 之间选择一个数作为 `level[]` 数组的大小，即索引高度。
+创建 skiplist 时，根据 _幂次定律 (Power Law)_ (越大的数出现的概率越小) 在 1-32 之间选择一个数作为 `level[]` 数组的大小，即索引高度。
 
-* `level[]` 中的每一层都有一个前向指针 `forward`，用于从表头方向访问表尾方向的结点
-* `span` 跨度实际上是用于计算排位，而不是用于遍历
-* 后退指针每次只能回退一个结点 (因为只有一层)
+- `level[]` 中的每一层都有一个前向指针 `forward`，用于从表头方向访问表尾方向的结点
+- `span` 跨度实际上是用于计算排位，而不是用于遍历
+- 后退指针每次只能回退一个结点 (因为只有一层)
 
 跳跃表中的内容分为：
 
-* `obj` - 成员对象 (指向一个 SDS)
-* `score` - 分值 (跳跃表的排序基准，从小到大)
+- `obj` - 成员对象 (指向一个 SDS)
+- `score` - 分值 (跳跃表的排序基准，从小到大)
 
 成员对象必须是唯一的，`score` 的值可以相同，相同时按 `obj` 对应 SDS 的字典序排序。
 
@@ -54,6 +54,3 @@ typedef struct zskiplist {
 ```
 
 其中，表头结点不算在 `length` 和 `level` 中。
-
----
-

@@ -97,8 +97,8 @@ index = hash & dict->ht[x].sizemask;
 
 在平时，hash table 只使用 `ht[0]`；当 rehash 时，hash table 使用 `ht[1]` 分配内存。分配内存时有两种情况，但需要保证分配的内存对应的结点数为 **2 的整数次幂**：
 
-* 扩容
-* 收缩
+- 扩容
+- 收缩
 
 内存分配完毕后，将 `ht[0]` 上的点 **逐步迁移** 到 `ht[1]` 中，直到 `ht[0]` 称为一个空表。将 `ht[1]` 赋值给 `ht[0]`，使 `ht[1]` 为下一次 rehash 做准备。
 
@@ -131,6 +131,3 @@ Redis 通过 `rehashidx` 标志字典的 rehash 状态。在 rehash 进行期间
 ---
 
 与 JDK 中的 HashMap 可以说是各有千秋吧，挺有趣的。
-
----
-

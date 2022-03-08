@@ -20,4 +20,4 @@ In the repo are only notes of reading the book _The Design and Implementation of
 
 ## License
 
-Copyright © 2020, Jingtang Zhang. ([MIT License](LICENSE))
+Copyright © 2020, Jingtang Zhang. ([MIT License](./LICENSE))

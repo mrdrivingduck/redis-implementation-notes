@@ -24,22 +24,22 @@ typedef struct redisObject {
 
 对象类型有：
 
-* `REDIS_STRING` - 字符串对象
-* `REDIS_LIST` - 列表对象
-* `REDIS_HASH` - 哈希对象
-* `REDIS_SET` - 集合对象
-* `REDIS_ZSET` - 有序集合对象
+- `REDIS_STRING` - 字符串对象
+- `REDIS_LIST` - 列表对象
+- `REDIS_HASH` - 哈希对象
+- `REDIS_SET` - 集合对象
+- `REDIS_ZSET` - 有序集合对象
 
 而 `encoding` 属性记录了底层数据结构 `ptr` 具体由什么数据结构实现。Encoding 可以有：
 
-* `REDIS_ENCODING_INT`
-* `REDIS_ENCODING_EMBSTR` - embstr 编码的 SDS 字符串
-* `REDIS_ENCODING_RAW` - SDS 字符串
-* `REDIS_ENCODING_HT` - 字典
-* `REDIS_ENCODING_LINKEDLIST` - 双向链表
-* `REDIS_ENCODING_ZIPLIST` - 压缩列表
-* `REDIS_ENCODING_INTSET` - 整数集合
-* `REDIS_ENCODING_SKIPLIST` - 跳跃表和字段
+- `REDIS_ENCODING_INT`
+- `REDIS_ENCODING_EMBSTR` - embstr 编码的 SDS 字符串
+- `REDIS_ENCODING_RAW` - SDS 字符串
+- `REDIS_ENCODING_HT` - 字典
+- `REDIS_ENCODING_LINKEDLIST` - 双向链表
+- `REDIS_ENCODING_ZIPLIST` - 压缩列表
+- `REDIS_ENCODING_INTSET` - 整数集合
+- `REDIS_ENCODING_SKIPLIST` - 跳跃表和字段
 
 每种对象类型都至少使用了两种不同的编码实现。Redis 可以根据不同的使用场景来为对象设置不同的编码，极大提升了灵活性和效率。
 
@@ -49,17 +49,17 @@ Redis 中所有的 key 都是字符串对象，而 value 可以是任意对象�
 
 字符串对象的编码有三种：
 
-* int
-* raw
-* embstr
+- int
+- raw
+- embstr
 
 其中，int 对应一个可以表示为数字的字符串。那么直接将这个数字存储在 `ptr` 所占用的空间中 (不当指针用了)；如果字符串的长度 > 39B，那么使用 SDS 来保存，编码类型为 raw。
 
 如果字符串的长度 < 39B，使用专门用于优化短字符串的 embstr 编码方式。这种编码方式下，redisObject 的内存空间与其中 `ptr` 指针指向的 SDS 内存空间将通过一次内存分配直接分配完毕：
 
-* 只需要一次内存分配
-* 只需要一次内存回收
-* 对象和字符串值保存在连续的内存中，可以利用缓存带来的性能优势
+- 只需要一次内存分配
+- 只需要一次内存回收
+- 对象和字符串值保存在连续的内存中，可以利用缓存带来的性能优势
 
 ### Encoding Conversion
 
@@ -69,13 +69,13 @@ Redis 中所有的 key 都是字符串对象，而 value 可以是任意对象�
 
 列表对象的编码可以为：
 
-* ziplist
-* linkedlist
+- ziplist
+- linkedlist
 
 ### Encoding Conversion
 
-* 列表中所有字符串元素的长度都 < 64B
-* 列表中保存的元素数量 < 512 个
+- 列表中所有字符串元素的长度都 < 64B
+- 列表中保存的元素数量 < 512 个
 
 当这两个条件无法被满足时，就只能使用双向链表编码。这两个阈值可以在配置中修改。
 
@@ -89,8 +89,8 @@ Redis 中所有的 key 都是字符串对象，而 value 可以是任意对象�
 
 ### Encoding Conversion
 
-* 所有 key 和 value 的字符串长度都 < 64B
-* 键值对数量 < 512
+- 所有 key 和 value 的字符串长度都 < 64B
+- 键值对数量 < 512
 
 当这两个条件无法被满足时，就只能使用 hash table 编码。这两个阈值可以在配置中修改。
 
@@ -100,8 +100,8 @@ Redis 中所有的 key 都是字符串对象，而 value 可以是任意对象�
 
 ### Encoding Conversion
 
-* 集合中所有元素都是整数值
-* 集合中保存的元素数量不超过 512 个
+- 集合中所有元素都是整数值
+- 集合中保存的元素数量不超过 512 个
 
 不能满足以上条件的集合只能使用 hash table 编码。
 
@@ -122,19 +122,19 @@ typedef struct zset {
 
 其中，`zsl` 跳跃表结构按照 score 从小到大保存了所有集合元素 - 跳跃表结点的 `obj` 属性保存 member，`score` 属性保存分值；另外，`dict` 结构以 key-value pair 的形式保存了每一个集合元素：
 
-* key 对应元素 member
-* value 对应元素 score
+- key 对应元素 member
+- value 对应元素 score
 
 这样可以以 O(1) 的时间复杂度查找 member 的 score。
 
 另外，这两个数据结构通过指针共享相同的元素内存，而不是引用不同的副本。
 
-> 理论上，这种复合实现方式的性能会比任意一种单独实现的方式要好。跳跃表保证了 **有序性** 以及 **范围查询** 的性能；而字典则保证了能以 O(1) 的时间复杂度查询 score，否则跳跃表就只能以 O(n * log(n)) 来查询元素的 score。
+> 理论上，这种复合实现方式的性能会比任意一种单独实现的方式要好。跳跃表保证了 **有序性** 以及 **范围查询** 的性能；而字典则保证了能以 O(1) 的时间复杂度查询 score，否则跳跃表就只能以 O(n \* log(n)) 来查询元素的 score。
 
 ### Encoding Conversion
 
-* 有序集合保存的元素个数 < 128
-* 有序集合保存的元素 member 的长度都 < 64B
+- 有序集合保存的元素个数 < 128
+- 有序集合保存的元素 member 的长度都 < 64B
 
 如果不能满足这两个条件，那么有序集合对象只能使用 skiplist 编码。
 
@@ -160,10 +160,10 @@ typedef struct redisObject {
 } robj;
 ```
 
-* 创建新对象时，引用计数被初始化为 1
-* ++
-* --
-* 引用计数为 0 时，对象占用的内存将被释放
+- 创建新对象时，引用计数被初始化为 1
+- ++
+- --
+- 引用计数为 0 时，对象占用的内存将被释放
 
 ## Object Sharing
 
@@ -186,6 +186,3 @@ typedef struct redisObject {
 ```
 
 当 Redis 中的一些特定选项被打开，如果服务器占用的内存数超过阈值，那么 LRU 值较高的对象将优先被服务器释放，从而回收内存。
-
----
-

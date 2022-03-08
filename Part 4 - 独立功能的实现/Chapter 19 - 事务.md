@@ -65,13 +65,13 @@ typedef struct redisDb {
 
 这个字典的 key 就是数据库中被监视的 key；value 是一个链表，维护了监视这个 key 的全部客户端。所有对数据库进行修改的命令，如：
 
-* `SET`
-* `LPUSH`
-* `SADD`
-* `ZREM`
-* `DEL`
-* `FLUSHDB`
-* ...
+- `SET`
+- `LPUSH`
+- `SADD`
+- `ZREM`
+- `DEL`
+- `FLUSHDB`
+- ...
 
 这些命令执行后，Redis 都会调用 `touchWatchKey()` 函数 对 `watched_keys` 字典进行检查。如果修改的 key 位于字典中，那么就将监视这个 key 的所有客户端的 `REDIS_DIRTY_CAS` 标志位打开，表示客户端的事务安全性已经被破坏。
 
@@ -114,6 +114,3 @@ typedef struct redisDb {
 其中，只有 AOF 模式下的 `appendfsync` 选项为 `always` 时，命令的执行结果才能立刻写入磁盘中；其它模式下，Redis 都要等一定的条件满足才会进行持久化。因此，只有这一种配置下的事务具有持久性。
 
 配置选项 `no-appendfsync-on-rewrite` 会停止对 AOF 文件进行同步，即使 `appendfsync` 的选项为 `always`。这样一来，即使是这种配置下，事务也不在具有持久性。
-
----
-

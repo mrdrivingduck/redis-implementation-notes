@@ -10,8 +10,8 @@ Nanjing, Jiangsu, China
 
 Redis 的慢查询日志功能用于记录执行时间超过给定时长的命令请求。用户可以通过慢查询日志来监视和优化查询速度。
 
-* `slowlog-log-slower-than` 指定执行时间超过该阈值的命令会被记录
-* `slowlog-max-len` 指定服务器最多保存多少条慢查询日志
+- `slowlog-log-slower-than` 指定执行时间超过该阈值的命令会被记录
+- `slowlog-max-len` 指定服务器最多保存多少条慢查询日志
 
 与该功能相关的数据结构：
 
@@ -20,7 +20,7 @@ struct redisServer {
     // ...
     long long slowlog_entry_id; // 下一条慢查询日志 id
     list *slowlog; // 保存了所有慢查询日志的链表
-    
+
     long long slowlog_log_slower_than;
     unsigned long slowlog_max_len;
     // ...
@@ -40,6 +40,3 @@ typedef struct slowlogEntry {
 ```
 
 每次执行命令前后，程序都会记录微秒格式的 UNIX 时间戳，两个时间戳的差就是服务器执行命令所耗费的时长。如果超出了设定阈值，就产生一条新的慢查询日志加入链表；如果链表长度超出阈值，则删除最早的慢查询日志。
-
----
-
